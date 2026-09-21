@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#111713">
+    <title>寒破先锋 · 智温守护控制台</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">HP</span>
+          <div>
+            <strong>寒破先锋</strong>
+            <span>智温守护控制台</span>
+          </div>
+        </div>
+        <div class="topbar-status">
+          <span class="live-dot" id="live-dot"></span>
+          <span id="live-label">正在连接</span>
+          <span class="clock" id="clock">--:--:--</span>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="device-rail">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">装备编队</span>
+              <h1 id="fleet-count">0 台在线</h1>
+            </div>
+            <span class="alert-count" id="alert-count">0 SOS</span>
+          </div>
+          <div class="device-list" id="device-list" aria-live="polite"></div>
+          <div class="rail-footer">
+            <div class="summary-cell">
+              <span>告警</span>
+              <strong id="summary-watch">0</strong>
+            </div>
+            <div class="summary-cell">
+              <span>待确认</span>
+              <strong id="summary-unacked">0</strong>
+            </div>
+          </div>
+        </aside>
+
+        <section class="main-stage">
+          <div class="map-panel">
+            <div class="panel-heading">
+              <div>
+                <span class="eyebrow">搜救态势</span>
+                <h2>东海联合演练区域</h2>
+              </div>
+              <div class="map-legend">
+                <span><i class="dot normal"></i>正常</span>
+                <span><i class="dot watch"></i>关注</span>
+                <span><i class="dot sos"></i>求救</span>
+              </div>
+            </div>
+            <canvas id="map-canvas" aria-label="设备和救援路线地图"></canvas>
+            <div class="map-overlay">
+              <div>
+                <span>预测窗口</span>
+                <strong>1-6 h</strong>
+              </div>
+              <div>
+                <span>海况</span>
+                <strong>0.33 m/s E</strong>
+              </div>
+              <div>
+                <span>风力</span>
+                <strong>7.5 m/s E</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="metric-strip">
+            <article class="metric-card">
+              <div class="metric-label">核心体温</div>
+              <div class="metric-value"><span id="core-temp">--</span><small>℃</small></div>
+              <div class="metric-foot" id="core-temp-foot">等待数据</div>
+            </article>
+            <article class="metric-card">
+              <div class="metric-label">发热功率</div>
+              <div class="metric-value"><span id="heat-power">--</span><small>W</small></div>
+              <div class="metric-foot" id="heat-mode">等待数据</div>
+            </article>
+            <article class="metric-card">
+              <div class="metric-label">能源余量</div>
+              <div class="metric-value"><span id="energy-soc">--</span><small>%</small></div>
+              <div class="metric-foot" id="energy-source">等待数据</div>
+            </article>
+            <article class="metric-card">
+              <div class="metric-label">救援优先级</div>
+              <div class="metric-value"><span id="priority-score">--</span><small>/100</small></div>
+              <div class="metric-foot" id="priority-foot">等待数据</div>
+            </article>
+          </div>
+
+          <div class="trend-panel">
+            <div class="panel-heading compact">
+              <div>
+                <span class="eyebrow">体温趋势</span>
+                <h3>最近 20 分钟</h3>
+              </div>
+              <div class="trend-key">
+                <span><i class="line core"></i>核心</span>
+                <span><i class="line surface"></i>加热面</span>
+              </div>
+            </div>
+            <canvas id="trend-canvas" aria-label="体温趋势图"></canvas>
+          </div>
+        </section>
+
+        <aside class="inspector">
+          <div class="inspector-header">
+            <div>
+              <span class="eyebrow">设备详情</span>
+              <h2 id="selected-name">--</h2>
+              <code id="selected-id">--</code>
+            </div>
+            <span class="state-pill" id="selected-state">--</span>
+          </div>
+
+          <section class="inspector-section">
+            <h3>热管理</h3>
+            <div class="thermal-readout">
+              <div>
+                <span>核心</span>
+                <strong id="detail-core">--℃</strong>
+              </div>
+              <div>
+                <span>表面</span>
+                <strong id="detail-surface">--℃</strong>
+              </div>
+              <div>
+                <span>环境</span>
+                <strong id="detail-ambient">--℃</strong>
+              </div>
+            </div>
+            <div class="zone-bars">
+              <div class="zone-row">
+                <span>胸部</span>
+                <div><i id="zone-chest"></i></div>
+                <strong id="zone-chest-value">0%</strong>
+              </div>
+              <div class="zone-row">
+                <span>背部</span>
+                <div><i id="zone-back"></i></div>
+                <strong id="zone-back-value">0%</strong>
+              </div>
+              <div class="zone-row">
+                <span>腰部</span>
+                <div><i id="zone-waist"></i></div>
+                <strong id="zone-waist-value">0%</strong>
+              </div>
+            </div>
+            <p class="decision-line" id="thermal-reason">--</p>
+          </section>
+
+          <section class="inspector-section split">
+            <div>
+              <h3>能源</h3>
+              <strong id="detail-source">--</strong>
+              <span id="detail-energy-reason">--</span>
+            </div>
+            <div class="energy-rings">
+              <div class="meter">
+                <span>超电</span>
+                <strong id="detail-cap-soc">--%</strong>
+              </div>
+              <div class="meter">
+                <span>电池</span>
+                <strong id="detail-bat-soc">--%</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="inspector-section">
+            <div class="section-title-row">
+              <h3>救援</h3>
+              <button class="text-button" id="ack-button" type="button">确认告警</button>
+            </div>
+            <div class="rescue-grid">
+              <div>
+                <span>距离</span>
+                <strong id="rescue-distance">--</strong>
+              </div>
+              <div>
+                <span>预计抵达</span>
+                <strong id="rescue-eta">--</strong>
+              </div>
+            </div>
+            <p class="decision-line" id="rescue-rationale">--</p>
+          </section>
+
+          <section class="inspector-section scenario-section">
+            <h3>工况注入</h3>
+            <div class="segmented" id="scenario-buttons">
+              <button type="button" data-scenario="normal">活动</button>
+              <button type="button" data-scenario="resting">静止</button>
+              <button type="button" data-scenario="unconscious">昏迷</button>
+              <button type="button" data-scenario="overheat">过热</button>
+              <button type="button" data-scenario="cold">极寒</button>
+            </div>
+          </section>
+
+          <section class="inspector-section event-section">
+            <h3>事件流</h3>
+            <div class="event-list" id="event-list"></div>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <template id="device-template">
+      <button class="device-card" type="button">
+        <span class="device-status"></span>
+        <span class="device-copy">
+          <strong></strong>
+          <small></small>
+        </span>
+        <span class="device-priority"></span>
+      </button>
+    </template>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>
+

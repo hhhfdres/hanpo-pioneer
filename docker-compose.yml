@@ -1,0 +1,9 @@
+services:
+  hanpo-pioneer:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      HANPO_DASHBOARD_DIR: /app/apps/dashboard
+    restart: unless-stopped
+

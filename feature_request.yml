@@ -1,0 +1,27 @@
+name: Feature request
+description: Propose a scoped improvement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Describe the user or engineering need.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the interface, fallback behavior, and test strategy.
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks
+      description: Note hardware, privacy, security, or deployment implications.
+    validations:
+      required: true
+
